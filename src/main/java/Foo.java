@@ -1,4 +1,5 @@
-class Foo {
-    String field1 = "foo";
-    int field2 = 42;
+
+public class Foo {
+    public String field1 = "foo";
+    public int field2 = 42;
 }

@@ -1,5 +1,6 @@
+package wrapper;
+
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
@@ -7,21 +8,18 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Base64;
 
-class FooSerializer extends StdSerializer<Foo> {
+public class Base64WrapperSerializer extends StdSerializer<Base64Wrapper> {
 
-    private final JsonSerializer<Object> defaultSerializer;
 
-    public FooSerializer(JsonSerializer<Object> defaultSerializer) {
-        super(Foo.class);
-        this.defaultSerializer = defaultSerializer;
+    public Base64WrapperSerializer() {
+        super(Base64Wrapper.class);
     }
 
     @Override
-    public void serialize(Foo value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(Base64Wrapper value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         StringWriter stringWriter = new StringWriter();
         JsonGenerator tempGen = provider.getGenerator().getCodec().getFactory().createGenerator(stringWriter);
-        defaultSerializer.serialize(value, tempGen, provider);
-
+        provider.defaultSerializeValue(value.getWrapped(), tempGen);
         tempGen.flush();
 
         String json = stringWriter.toString();
